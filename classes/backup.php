@@ -153,8 +153,8 @@ class backup {
         global $CFG;
         $admin = get_admin();
         $fulltempdir = make_backup_temp_directory($templateid);
-        $format1 = helper::detect_moodle2_format($fulltempdir);
-        $format = backup_general_helper::detect_backup_format($fulltempdir);
+        $format1 = helper::detect_moodle2_format($templateid);
+        $format = backup_general_helper::detect_backup_format($templateid);
         file_put_contents(
             sprintf('%s/local_course_template.log', $CFG->tempdir),
             sprintf(
