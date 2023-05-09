@@ -24,6 +24,8 @@
 
 namespace local_course_template;
 
+use backup_general_helper;
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/lib/filestorage/mbz_packer.php');
@@ -148,8 +150,18 @@ class backup {
      * @return bool A status indicating success or failure
      */
     public static function restore_backup($templateid, $courseid) {
+        global $CFG;
         $admin = get_admin();
         $fulltempdir = make_backup_temp_directory($templateid);
+        $format = backup_general_helper::detect_backup_format($fulltempdir);
+        file_put_contents(
+            sprintf('%s/local_course_template.log', $CFG->tempdir),
+            sprintf(
+                "%s\n",
+                var_export($format, true)
+            ),
+            FILE_APPEND
+        );
 
         $rc = new \restore_controller(
             $fulltempdir,
