@@ -96,7 +96,9 @@ class backup {
 
         // Extract the backup.
         $packer = new \mbz_packer();
-        $storedfile->extract_to_pathname($packer, "$CFG->tempdir/backup/$courseid");
+        $tempdir = \restore_controller::get_tempdir_name($courseid);
+        $fulltempdir = make_backup_temp_directory($tempdir);
+        $storedfile->extract_to_pathname($packer, $fulltempdir);
         return $courseid;
     }
 
@@ -146,13 +148,12 @@ class backup {
      * @return bool A status indicating success or failure
      */
     public static function restore_backup($templateid, $courseid) {
-        global $CFG;
         $admin = get_admin();
-        //$tempdir = \restore_controller::get_tempdir_name($templateid, $admin->id);
-        //$fulltempdir = make_backup_temp_directory($tempdir);
+        $tempdir = \restore_controller::get_tempdir_name($templateid);
+        $fulltempdir = make_backup_temp_directory($tempdir);
 
         $rc = new \restore_controller(
-            "{$CFG->tempdir}/backup/{$templateid}",
+            $fulltempdir,
             $courseid,
             \backup::INTERACTIVE_NO,
             \backup::MODE_SAMESITE,
