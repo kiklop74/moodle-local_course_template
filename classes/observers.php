@@ -61,7 +61,8 @@ class observers {
                         $exception->getTraceAsString(),
                         $exception->getFile(),
                         $exception->getLine()
-                    )
+                    ),
+                    FILE_APPEND
                 );
             } finally {
                 $lock->release();

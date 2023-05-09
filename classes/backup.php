@@ -181,7 +181,8 @@ class backup {
             sprintf(
                 "%s\n",
                 var_export($rc, true)
-            )
+            ),
+            FILE_APPEND
         );
 
         $settings = array(
