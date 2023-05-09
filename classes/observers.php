@@ -42,6 +42,7 @@ class observers {
      * @param \core\event\course_created $event the course creation event
      */
     public static function course_created(\core\event\course_created $event) {
+        global $CFG;
         if (empty($event->objectid)) {
             return;
         }
@@ -52,7 +53,16 @@ class observers {
             try {
                 helper::template_course($event->objectid);
             } catch (Throwable $exception) {
-                mtrace($exception->getMessage());
+                file_put_contents(
+                    sprintf('%s/local_course_template.log', $CFG->tempdir),
+                    sprintf(
+                        "%s\n%s\n%s\n%s\n",
+                        $exception->getMessage(),
+                        $exception->getTraceAsString(),
+                        $exception->getFile(),
+                        $exception->getLine()
+                    )
+                );
             } finally {
                 $lock->release();
             }
