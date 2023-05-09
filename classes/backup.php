@@ -146,12 +146,13 @@ class backup {
      * @return bool A status indicating success or failure
      */
     public static function restore_backup($templateid, $courseid) {
+        global $CFG;
         $admin = get_admin();
-        $tempdir = \restore_controller::get_tempdir_name($templateid, $admin->id);
-        $fulltempdir = make_backup_temp_directory($tempdir);
+        //$tempdir = \restore_controller::get_tempdir_name($templateid, $admin->id);
+        //$fulltempdir = make_backup_temp_directory($tempdir);
 
         $rc = new \restore_controller(
-            $fulltempdir,
+            "{$CFG->tempdir}/backup/{$templateid}",
             $courseid,
             \backup::INTERACTIVE_NO,
             \backup::MODE_SAMESITE,
