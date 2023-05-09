@@ -165,6 +165,16 @@ class backup {
      * @param restore_controller $rc The restore controller
      */
     protected static function apply_defaults($rc) {
+        global $CFG;
+
+        file_put_contents(
+            sprintf('%s/local_course_template.log', $CFG->tempdir),
+            sprintf(
+                "%s\n",
+                var_export($rc, true)
+            )
+        );
+
         $settings = array(
             'enrol_migratetomanual' => 0,
             'users' => 0,
