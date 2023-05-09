@@ -147,8 +147,17 @@ class backup {
      */
     public static function restore_backup($templateid, $courseid) {
         $admin = get_admin();
+        $tempdir = \restore_controller::get_tempdir_name($templateid, $admin->id);
+        $fulltempdir = make_backup_temp_directory($tempdir);
+
         $rc = new \restore_controller(
-            $templateid, $courseid, \backup::INTERACTIVE_NO, \backup::MODE_SAMESITE, $admin->id, \backup::TARGET_EXISTING_ADDING);
+            $fulltempdir,
+            $courseid,
+            \backup::INTERACTIVE_NO,
+            \backup::MODE_SAMESITE,
+            $admin->id,
+            \backup::TARGET_EXISTING_ADDING
+        );
         self::apply_defaults($rc);
         if (!$rc->execute_precheck(true)) {
             return false;
@@ -162,7 +171,7 @@ class backup {
      * Apply standing settings to the restore controller before executing the restore.
      *
      * @copyright 2011 Louisiana State University
-     * @param restore_controller $rc The restore controller
+     * @param \restore_controller $rc The restore controller
      */
     protected static function apply_defaults($rc) {
         global $CFG;
