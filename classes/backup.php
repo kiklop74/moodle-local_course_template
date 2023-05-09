@@ -152,21 +152,8 @@ class backup {
     public static function restore_backup($templateid, $courseid) {
         global $CFG;
         $admin = get_admin();
-        $fulltempdir = make_backup_temp_directory($templateid);
-        $format1 = helper::detect_moodle2_format($templateid);
-        $format = backup_general_helper::detect_backup_format($templateid);
-        file_put_contents(
-            sprintf('%s/local_course_template.log', $CFG->tempdir),
-            sprintf(
-                "%s\n%s\n",
-                var_export($format, true),
-                var_export($format1, true),
-            ),
-            FILE_APPEND
-        );
-
         $rc = new \restore_controller(
-            $fulltempdir,
+            $templateid,
             $courseid,
             \backup::INTERACTIVE_NO,
             \backup::MODE_SAMESITE,
