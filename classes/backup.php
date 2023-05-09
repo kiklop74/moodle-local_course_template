@@ -150,7 +150,6 @@ class backup {
      * @return bool A status indicating success or failure
      */
     public static function restore_backup($templateid, $courseid) {
-        global $CFG;
         $admin = get_admin();
         $rc = new \restore_controller(
             $templateid,
@@ -176,17 +175,6 @@ class backup {
      * @param \restore_controller $rc The restore controller
      */
     protected static function apply_defaults($rc) {
-        global $CFG;
-
-        file_put_contents(
-            sprintf('%s/local_course_template.log', $CFG->tempdir),
-            sprintf(
-                "%s\n",
-                var_export($rc, true)
-            ),
-            FILE_APPEND
-        );
-
         $settings = array(
             'enrol_migratetomanual' => 0,
             'users' => 0,

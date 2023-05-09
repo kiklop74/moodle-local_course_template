@@ -35,50 +35,6 @@ defined('MOODLE_INTERNAL') || die();
  */
 class helper {
 
-    public static function detect_moodle2_format($tempdir) {
-        global $CFG;
-        $dirpath = make_backup_temp_directory($tempdir, false);
-        if (!is_dir($dirpath)) {
-            throw new \RuntimeException('Invalid directory!');
-        }
-
-        $filepath = $dirpath . '/moodle_backup.xml';
-        if (!file_exists($filepath)) {
-            file_put_contents(
-                sprintf('%s/local_course_template.log', $CFG->tempdir),
-                sprintf(
-                    "%s\n",
-                    var_export($filepath, true)
-                ),
-                FILE_APPEND
-            );
-            return false;
-        }
-
-        $handle     = fopen($filepath, 'r');
-        $firstchars = fread($handle, 200);
-        $status     = fclose($handle);
-
-        file_put_contents(
-            sprintf('%s/local_course_template.log', $CFG->tempdir),
-            sprintf(
-                "%s\n",
-                var_export($firstchars, true)
-            ),
-            FILE_APPEND
-        );
-
-        // Look for expected XML elements (case-insensitive to account for encoding attribute).
-        if (stripos($firstchars, '<?xml version="1.0" encoding="UTF-8"?>') !== false &&
-            strpos($firstchars, '<moodle_backup>') !== false &&
-            strpos($firstchars, '<information>') !== false) {
-
-            return true;
-        }
-
-        return false;
-    }
-
     /**
      * Applies the course template to the given course.
      *
