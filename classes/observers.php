@@ -24,6 +24,8 @@
 
 namespace local_course_template;
 
+use Throwable;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -47,8 +49,13 @@ class observers {
         $lockkey = "course{$event->objectid}";
         $lock = $lockfactory->get_lock($lockkey, 0);
         if ($lock !== false) {
-            helper::template_course($event->objectid);
-            $lock->release();
+            try {
+                helper::template_course($event->objectid);
+            } catch (Throwable $exception) {
+                mtrace($exception->getMessage());
+            } finally {
+                $lock->release();
+            }
         }
     }
 }
